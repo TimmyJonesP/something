@@ -4,7 +4,7 @@ import Link from "next/link";
 import { SignInButton, UserButton } from "@clerk/nextjs";
 
 import { currentUser } from "@clerk/nextjs/server";
-import ModeToggle from "./modeToggle";
+import ModeToggle from "./ModeToggle";
 
 async function DesktopNavbar() {
   const user = await currentUser();
