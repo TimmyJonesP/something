@@ -18,12 +18,12 @@ model User {
   email     String   @unique
   username  String   @unique
   clerkId   String   @unique
+  password  String?
   name      String?
   bio       String?
   image     String?
   location  String?
   website   String?
-  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
