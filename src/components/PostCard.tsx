@@ -1,4 +1,5 @@
 "use client";
+
 import {
   createComment,
   deletePost,
@@ -9,8 +10,10 @@ import { SignInButton, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Card, CardContent } from "./ui/card";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import Link from "next/link";
+import { Avatar, AvatarImage } from "./ui/avatar";
+import { formatDistanceToNow } from "date-fns";
+import { DeleteAlertDialog } from "./DeleteAlertDialog";
 import { Button } from "./ui/button";
 import {
   HeartIcon,
@@ -19,8 +22,6 @@ import {
   SendIcon,
 } from "lucide-react";
 import { Textarea } from "./ui/textarea";
-import { formatDistanceToNow } from "date-fns";
-import { DeleteAlertDialog } from "./DeleteAlertDialog";
 
 type Posts = Awaited<ReturnType<typeof getPosts>>;
 type Post = Posts[number];
@@ -29,27 +30,26 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
   const { user } = useUser();
   const [newComment, setNewComment] = useState("");
   const [isCommenting, setIsCommenting] = useState(false);
-  const [isLiking, setIsLinking] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [hasLiked, setHasLiked] = useState(
     post.likes.some((like) => like.userId === dbUserId)
   );
-  const [optimisticLikes, setOptimisticLikes] = useState(post._count.likes);
+  const [optimisticLikes, setOptmisticLikes] = useState(post._count.likes);
   const [showComments, setShowComments] = useState(false);
 
   const handleLike = async () => {
     if (isLiking) return;
-
     try {
-      setIsLinking(true);
+      setIsLiking(true);
       setHasLiked((prev) => !prev);
-      setOptimisticLikes((prev) => prev + (hasLiked ? -1 : 1));
+      setOptmisticLikes((prev) => prev + (hasLiked ? -1 : 1));
       await toggleLike(post.id);
     } catch (error) {
-      setOptimisticLikes(post._count.likes);
+      setOptmisticLikes(post._count.likes);
       setHasLiked(post.likes.some((like) => like.userId === dbUserId));
     } finally {
-      setIsLinking(false);
+      setIsLiking(false);
     }
   };
 
@@ -93,6 +93,8 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
                 <AvatarImage src={post.author.image ?? "/avatar.png"} />
               </Avatar>
             </Link>
+
+            {/* POST HEADER & TEXT CONTENT */}
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 truncate">
