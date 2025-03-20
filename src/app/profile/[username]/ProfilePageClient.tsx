@@ -94,7 +94,7 @@ function ProfilePageClient({
     currentUser?.username === user.username ||
     currentUser?.emailAddresses[0].emailAddress.split("@")[0] === user.username;
 
-  const formattedDate = format(new Date(user.createdAt), "MMMMM YYYY");
+  const formattedDate = format(new Date(user.createdAt), "dd MMM yyyy");
 
   return (
     <div className="max-w-3xl mx-auto">
